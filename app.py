@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 import sqlite3 as sql
-import csv
 import hashlib
 
 app = Flask(__name__)
