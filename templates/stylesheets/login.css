@@ -1,0 +1,25 @@
+
+#user-selector{
+    /*background-color: red;*/
+    border: 1px solid grey;
+    border-radius: 5px;
+    display: flex;
+    height: 36px;
+    align-items: center;
+    align-content: space-evenly;
+    /*justify-content: center;*/
+}
+
+/*input[type="radio"]{*/
+/*    visibility:hidden;*/
+/*}*/
+
+input[type="radio"]:checked+label{
+    font-weight: bold;
+    background-color: blue;
+}
+
+.user-type{
+
+
+}

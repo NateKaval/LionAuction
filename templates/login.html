@@ -3,6 +3,7 @@
 <head>
     <title>Lion Auction Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><body>
+    <link rel="stylesheet" href="stylesheets/login.css">
     <div class="container">
         <div class="row mt-5">
             <div class="col-md-6 offset-md-3">
@@ -21,13 +22,10 @@
                     </div>
                     <div class="form-group">
                         <label>User Type</label><br>
-                        <div>
-                            <input type="radio" id="seller" name="user_type" value="Seller">
-                            <label for="seller">Seller</label>
-                            <input type="radio" id="bidder" name="user_type" value="Bidder">
-                            <label for="bidder">Bidder</label>
-                            <input type="radio" id="helpdesk" name="user_type" value="Helpdesk">
-                            <label for="helpdesk">Helpdesk</label>
+                        <div id="user-selector">
+                            <div class="user-type"><input type="radio" id="seller" name="user_type" value="Seller"><label for="seller">Seller</label></div>
+                            <div class="user-type"><input type="radio" id="bidder" name="user_type" value="Bidder"><label for="bidder">Bidder</label></div>
+                            <div class="user-type"><input type="radio" id="helpdesk" name="user_type" value="Helpdesk"><label for="helpdesk">Helpdesk</label></div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Login</button>

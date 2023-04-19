@@ -34,10 +34,18 @@ def login():
         cursor = connection.cursor()
         email = request.form['Email']
         password = request.form['Password']
+        user_type = request.form['user_type']
         hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        if user_type == 'Seller':
+            print('Seller')
+        elif user_type == 'Bidder':
+            print('Bidder')
+        elif user_type == 'Helpdesk':
+            print('Helpdesk')
         cursor.execute("SELECT * FROM users WHERE email=? AND password=?", (email, hashed_password))
         user = cursor.fetchone()
         print(user)
+        print(user_type)
         if user is not None:
             session['email'] = user[0]
             return redirect(url_for('home'))
