@@ -301,7 +301,7 @@ def populate_categories(file):
 
     for row in data:
         parent_category = row[0]
-        category_name = row[1].lower()
+        category_name = row[1]
 
         cursor.execute('INSERT or REPLACE INTO Categories (parent_category, category_name) VALUES (?, ?)',
                        (parent_category, category_name))
