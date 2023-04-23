@@ -1,3 +1,5 @@
+import ast
+
 from flask import Flask, render_template, request, session, redirect, url_for
 import sqlite3 as sql
 import hashlib
@@ -95,23 +97,60 @@ def parent_categories():
     return category_list
 
 
-@app.route('/parent-filter', methods=['POST'])
-def parent_filter():
+# Get auction listings from selected child categories in a list
+def get_sub_category_auctions(sub_category_list):
     connection = sql.connect('database.db')
-    category = request.form['categoryName']
-    print(category)
+    query = 'SELECT * FROM Auction_Listings WHERE Auction_Listings.Category IN ({})'.format(
+        ','.join('?' * len(sub_category_list)))
+    auctions = connection.execute(query, sub_category_list).fetchall()
+    return auctions
+
+
+# Get all auctions listings from the main parent category
+def get_all_sub_category_auctions(category):
+    all_sub_category_list = get_sub_category_list(category)
+    all_sub_category_list.append(category)
+    auctions = get_sub_category_auctions(all_sub_category_list)
+    return auctions
+
+
+# Get list of all sub categories within a parent category
+def get_sub_category_list(category):
+    connection = sql.connect('database.db')
     cursor = connection.execute('SELECT category_name FROM Categories WHERE parent_category = ?;', (category,))
     sub_categories = cursor.fetchall()
-    sub_categories.append(category)
-    print(sub_categories)
-    sub_category_list = [i[0] for i in sub_categories]
-    print(sub_category_list)
-    query = 'SELECT * FROM Auction_Listings WHERE Auction_Listings.Category IN ({})'.format(','.join('?' * len(sub_category_list)))
-    auctions = cursor.execute(query, sub_category_list).fetchall()
-    print(auctions)
-    categories = parent_categories()
+    all_sub_category_list = [i[0] for i in sub_categories]
+    return all_sub_category_list
 
-    return render_template('bidder/index.html', user=session['email'], auctions=auctions, categories=categories)
+
+@app.route('/parent-filter', methods=['POST'])
+def parent_filter():
+    # connection = sql.connect('database.db')
+    category = request.form['categoryName']
+    auctions = get_all_sub_category_auctions(category)
+    sub_category_list = get_sub_category_list(category)
+    print(auctions)
+    return render_template('bidder/products.html', user=session['email'], category=category, auctions=auctions,
+                           sub_categories=sub_category_list)
+
+
+# render the auction listing when a sub category(s) are selected
+@app.route('/auction-sub-filter', methods=['POST'])
+def auction_sub_filter():
+    selected_values = request.form.getlist('sub_category')
+    category = request.form['category']
+    sub_categories = request.form['sub_categories']
+    sub_categories_list = ast.literal_eval(sub_categories)
+    print(sub_categories)
+    print(selected_values)
+    if len(selected_values) == 0:
+        auctions = get_all_sub_category_auctions(category)
+        return render_template('bidder/products.html', user=session['email'], category=category, auctions=auctions,
+                               sub_categories=sub_categories_list)
+    else:
+        auctions = get_sub_category_auctions(selected_values)
+        return render_template('bidder/products.html', user=session['email'], category=category, auctions=auctions,
+                               sub_categories=sub_categories_list, selected_sub_categories=selected_values)
 
 
 # Run main app

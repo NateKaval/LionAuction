@@ -46,19 +46,15 @@
 <div class="container mt-3">
     <h1>Welcome to Lion Auction</h1>
     <p>This site allows students and other businesses to auction and bid on items</p>
-    <form id="parentFilter" action="/parent-filter" method="post">
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                All
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="height: 200px; overflow-y: scroll;">
-                {% for parent_category in categories %}
-                <li><a class="dropdown-item" href="#" onclick="updateDropdownText(this)">{{ parent_category }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
-        <input type="hidden" name="categoryName" id="categoryName">
+    <p>Home/{{ category }}</p>
+    <form method="POST" action="/auction-sub-filter" id="category_form">
+        <input type="hidden" name="category" value="{{ category }}">
+        <input type="hidden" name="sub_categories" value="{{ sub_categories }}">
+        {% for sub_category in sub_categories %}
+        <label><input type="checkbox" name="sub_category" value="{{ sub_category }}" onchange="document.getElementById('category_form').submit()" {% if sub_category in selected_sub_categories %}checked{% endif %}>{{ sub_category }}</label>
+        {% endfor %}
     </form>
+    <p>{{ sub_categories }}</p>
     <div class="card-body">
         <h2 class="card-title">Listings</h2>
         <table class="table table-dark">
@@ -93,19 +89,6 @@
         </table>
     </div>
 </div>
-<script>
-function updateDropdownText(selectedItem) {
-  // Get the text of the selected item
-  let selectedText = selectedItem.textContent.trim();
-
-  // Update the dropdown button text with the selected item's text
-  document.getElementById("dropdownMenuButton").textContent = selectedText;
-  // Set the value of the hidden input field to the selected item's text
-  document.getElementById("categoryName").value = selectedText;
-  // Submit the form
-  document.getElementById("parentFilter").submit();
-}
-</script>
 
 </body>
 </html>
