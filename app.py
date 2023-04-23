@@ -1,8 +1,10 @@
+
 import ast
+import hashlib
 
 from flask import Flask, render_template, request, session, redirect, url_for
-import sqlite3 as sql
-import hashlib
+
+from functions.categories import *
 
 app = Flask(__name__)
 app.secret_key = 'LionAuction'
@@ -49,15 +51,12 @@ def login():
         user_type = request.form['user_type']
         hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
         if user_type == 'Seller':
-            print('Seller')
             cursor.execute("SELECT Sellers.email FROM Users INNER JOIN Sellers ON Users.email = Sellers.email WHERE "
                            "Sellers.email=? AND Users.password=?", (email, hashed_password))
         elif user_type == 'Bidder':
-            print('Bidder')
             cursor.execute("SELECT Bidders.email FROM Users INNER JOIN Bidders ON Users.email = Bidders.email WHERE "
                            "Bidders.email=? AND Users.password=?", (email, hashed_password))
         elif user_type == 'Helpdesk':
-            print('Helpdesk')
             cursor.execute("SELECT Helpdesk.email FROM Users INNER JOIN Helpdesk ON Users.email = Helpdesk.email WHERE "
                            "Helpdesk.email=? AND Users.password=?", (email, hashed_password))
         user = cursor.fetchone()
@@ -80,56 +79,14 @@ def logout():
     return redirect('/')
 
 
-# Populate Auction Table
-def auction_listings():
-    connection = sql.connect('database.db')
-    cursor = connection.execute("SELECT * FROM Auction_Listings WHERE Status = 1;")
-    return cursor.fetchall()
-
-
-# Populate parent categories dropdown
-def parent_categories():
-    connection = sql.connect('database.db')
-    cursor = connection.execute('SELECT DISTINCT parent_category FROM Categories;')
-    categories = cursor.fetchall()
-    category_list = [i[0] for i in categories]
-    category_list.sort()
-    return category_list
-
-
-# Get auction listings from selected child categories in a list
-def get_sub_category_auctions(sub_category_list):
-    connection = sql.connect('database.db')
-    query = 'SELECT * FROM Auction_Listings WHERE Auction_Listings.Category IN ({})'.format(
-        ','.join('?' * len(sub_category_list)))
-    auctions = connection.execute(query, sub_category_list).fetchall()
-    return auctions
-
-
-# Get all auctions listings from the main parent category
-def get_all_sub_category_auctions(category):
-    all_sub_category_list = get_sub_category_list(category)
-    all_sub_category_list.append(category)
-    auctions = get_sub_category_auctions(all_sub_category_list)
-    return auctions
-
-
-# Get list of all sub categories within a parent category
-def get_sub_category_list(category):
-    connection = sql.connect('database.db')
-    cursor = connection.execute('SELECT category_name FROM Categories WHERE parent_category = ?;', (category,))
-    sub_categories = cursor.fetchall()
-    all_sub_category_list = [i[0] for i in sub_categories]
-    return all_sub_category_list
-
-
+# This route render the template for all auction listings from the category selected in the category dropdown
+# Uses the get_all_sub_category_auctions function to get all auctions from the category
+# Then get the sub category list from the get_sub_category_list function given a category
 @app.route('/parent-filter', methods=['POST'])
 def parent_filter():
-    # connection = sql.connect('database.db')
     category = request.form['categoryName']
     auctions = get_all_sub_category_auctions(category)
     sub_category_list = get_sub_category_list(category)
-    print(auctions)
     return render_template('bidder/products.html', user=session['email'], category=category, auctions=auctions,
                            sub_categories=sub_category_list)
 
@@ -141,8 +98,6 @@ def auction_sub_filter():
     category = request.form['category']
     sub_categories = request.form['sub_categories']
     sub_categories_list = ast.literal_eval(sub_categories)
-    print(sub_categories)
-    print(selected_values)
     if len(selected_values) == 0:
         auctions = get_all_sub_category_auctions(category)
         return render_template('bidder/products.html', user=session['email'], category=category, auctions=auctions,

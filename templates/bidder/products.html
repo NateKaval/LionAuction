@@ -46,7 +46,8 @@
 <div class="container mt-3">
     <h1>Welcome to Lion Auction</h1>
     <p>This site allows students and other businesses to auction and bid on items</p>
-    <p>Home/{{ category }}</p>
+    <p><span><a href="{{ url_for('home') }}">Home</a></span>/{{ category }}</p>
+    {% if sub_categories %}
     <form method="POST" action="/auction-sub-filter" id="category_form">
         <input type="hidden" name="category" value="{{ category }}">
         <input type="hidden" name="sub_categories" value="{{ sub_categories }}">
@@ -54,7 +55,7 @@
         <label><input type="checkbox" name="sub_category" value="{{ sub_category }}" onchange="document.getElementById('category_form').submit()" {% if sub_category in selected_sub_categories %}checked{% endif %}>{{ sub_category }}</label>
         {% endfor %}
     </form>
-    <p>{{ sub_categories }}</p>
+    {% endif %}
     <div class="card-body">
         <h2 class="card-title">Listings</h2>
         <table class="table table-dark">
