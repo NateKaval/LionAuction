@@ -5,6 +5,7 @@ import hashlib
 from flask import Flask, render_template, request, session, redirect, url_for
 
 from functions.categories import *
+from functions.listings import *
 
 app = Flask(__name__)
 app.secret_key = 'LionAuction'
@@ -87,7 +88,7 @@ def parent_filter():
     category = request.form['categoryName']
     auctions = get_all_sub_category_auctions(category)
     sub_category_list = get_sub_category_list(category)
-    return render_template('bidder/products.html', user=session['email'], category=category, auctions=auctions,
+    return render_template('bidder/listings.html', user=session['email'], category=category, auctions=auctions,
                            sub_categories=sub_category_list)
 
 
@@ -100,12 +101,21 @@ def auction_sub_filter():
     sub_categories_list = ast.literal_eval(sub_categories)
     if len(selected_values) == 0:
         auctions = get_all_sub_category_auctions(category)
-        return render_template('bidder/products.html', user=session['email'], category=category, auctions=auctions,
+        return render_template('bidder/listings.html', user=session['email'], category=category, auctions=auctions,
                                sub_categories=sub_categories_list)
     else:
         auctions = get_sub_category_auctions(selected_values)
-        return render_template('bidder/products.html', user=session['email'], category=category, auctions=auctions,
+        return render_template('bidder/listings.html', user=session['email'], category=category, auctions=auctions,
                                sub_categories=sub_categories_list, selected_sub_categories=selected_values)
+
+
+# render the product page for a selected listing
+@app.route('/product-page', methods=['POST'])
+def product_listing_page():
+    seller_email = request.form['seller_email']
+    listing_id = request.form['listing_id']
+
+    return "none"
 
 
 # Run main app

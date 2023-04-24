@@ -1,14 +1,8 @@
 import sqlite3 as sql
 
+
 # Categories.py defines all the functionality to get auction listings based on the categories
 # and supports app.route functions in app.py
-
-
-# Populate Auction Table
-def auction_listings():
-    connection = sql.connect('database.db')
-    cursor = connection.execute("SELECT * FROM Auction_Listings WHERE Status = 1;")
-    return cursor.fetchall()
 
 
 # Populate parent categories dropdown
@@ -24,8 +18,24 @@ def parent_categories():
 # Get auction listings from selected child categories in a list
 def get_sub_category_auctions(sub_category_list):
     connection = sql.connect('database.db')
-    query = 'SELECT * FROM Auction_Listings WHERE Auction_Listings.Category IN ({})'.format(
-        ','.join('?' * len(sub_category_list)))
+    query = """
+        SELECT
+          Auction_Listings.Listing_ID,
+          Auction_Listings.Seller_Email,
+          Auction_Listings.Auction_Title,
+          Auction_Listings.Category,
+          MAX(Bids.Bid_price) AS Max_Bid_Price,
+          (Auction_Listings.Max_bids - COUNT(Bids.Bid_ID)) AS Remaining_Bids,
+          COUNT(Bids.Bid_ID) AS Bid_Count
+        FROM
+          Auction_Listings
+          LEFT JOIN Bids ON Auction_Listings.Listing_ID = Bids.Listing_ID
+        WHERE
+          Auction_Listings.Status = 1
+          AND Auction_Listings.Category IN ({})
+        GROUP BY
+          Auction_Listings.Listing_ID;
+    """.format(','.join('?' * len(sub_category_list)))
     auctions = connection.execute(query, sub_category_list).fetchall()
     return auctions
 

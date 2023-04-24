@@ -61,36 +61,18 @@
     </form>
     <div class="card-body">
         <h2 class="card-title">Listings</h2>
-        <table class="table table-dark">
-            <tr>
-                <th scope="col"> Seller_Email</th>
-                <th scope="col"> Listing_ID</th>
-                <th scope="col"> Category</th>
-                <th scope="col"> Auction_Title</th>
-                <th scope="col"> Product_Name</th>
-                <th scope="col"> Product_Description</th>
-                <th scope="col"> Quantity</th>
-                <th scope="col"> Reserve_Price</th>
-                <th scope="col"> Max_bids</th>
-                <th scope="col"> Status</th>
-            </tr>
-            <tbody>
-            {% for Seller_Email,Listing_ID,Category,Auction_Title,Product_Name,Product_Description,Quantity,Reserve_Price,Max_bids,Status in auctions %}
-                <tr>
-                    <td> {{ Seller_Email }} </td>
-                    <td> {{ Listing_ID }} </td>
-                    <td> {{ Category }} </td>
-                    <td> {{ Auction_Title }} </td>
-                    <td> {{ Product_Name }} </td>
-                    <td> {{ Product_Description }} </td>
-                    <td> {{ Quantity }} </td>
-                    <td> {{ Reserve_Price }} </td>
-                    <td> {{ Max_bids }} </td>
-                    <td> {{ Status }} </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {% for Listing_ID,Seller_Email,Auction_Title,Category,Max_Bid_Price,Remaining_Bids,Bid_Count in auctions %}
+        <form action="/listing-page" method="post">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">{{ Auction_Title }}</h4>
+              <p class="card-text">{{ Category }}</p>
+              <a href="#" class="card-link">${% if Max_Bid_Price is not none %}{{ Max_Bid_Price }}{% else %}0{% endif %} * {{ Remaining_Bids }} Current Bids {{ Bid_Count }}</a>
+            </div>
+          </div>
+        </form>
+        {% endfor %}
+
     </div>
 </div>
 <script>
