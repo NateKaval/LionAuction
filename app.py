@@ -1,4 +1,3 @@
-
 import ast
 import hashlib
 
@@ -83,9 +82,17 @@ def logout():
 # This route render the template for all auction listings from the category selected in the category dropdown
 # Uses the get_all_sub_category_auctions function to get all auctions from the category
 # Then get the sub category list from the get_sub_category_list function given a category
-@app.route('/parent-filter', methods=['POST'])
+# @app.route('/parent-filter', methods=['GET'])
+# def parent_filter():
+#     category = request.args.get('categoryName')
+#     auctions = get_all_sub_category_auctions(category)
+#     sub_category_list = get_sub_category_list(category)
+#     return render_template('bidder/listings.html', user=session['email'], category=category, auctions=auctions,
+#                            sub_categories=sub_category_list)
+
+@app.route('/parent-filter', methods=['GET'])
 def parent_filter():
-    category = request.form['categoryName']
+    category = request.args.get('categoryName')
     auctions = get_all_sub_category_auctions(category)
     sub_category_list = get_sub_category_list(category)
     return render_template('bidder/listings.html', user=session['email'], category=category, auctions=auctions,
@@ -93,11 +100,11 @@ def parent_filter():
 
 
 # render the auction listing when a sub category(s) are selected
-@app.route('/auction-sub-filter', methods=['POST'])
+@app.route('/auction-sub-filter', methods=['GET'])
 def auction_sub_filter():
-    selected_values = request.form.getlist('sub_category')
-    category = request.form['category']
-    sub_categories = request.form['sub_categories']
+    selected_values = request.args.getlist('sub_category')
+    category = request.args.get('category')
+    sub_categories = request.args.get('sub_categories')
     sub_categories_list = ast.literal_eval(sub_categories)
     if len(selected_values) == 0:
         auctions = get_all_sub_category_auctions(category)
@@ -110,12 +117,15 @@ def auction_sub_filter():
 
 
 # render the product page for a selected listing
-@app.route('/product-page', methods=['POST'])
+@app.route('/product-page', methods=['GET'])
 def product_listing_page():
-    seller_email = request.form['seller_email']
-    listing_id = request.form['listing_id']
-
-    return "none"
+    seller_email = request.args.get('seller_email')
+    listing_id = request.args.get('listing_id')
+    product_info = get_auction_listing(seller_email, listing_id)
+    print(product_info)
+    print(get_parent_category(product_info[3]))
+    parent_category = get_parent_category(product_info[3])
+    return render_template('bidder/product-page.html', user=session['email'], product_info=product_info, parent_category=parent_category)
 
 
 # Run main app

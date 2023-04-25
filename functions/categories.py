@@ -8,11 +8,19 @@ import sqlite3 as sql
 # Populate parent categories dropdown
 def parent_categories():
     connection = sql.connect('database.db')
-    cursor = connection.execute('SELECT DISTINCT parent_category FROM Categories;')
+    cursor = connection.execute("SELECT category_name FROM Categories WHERE parent_category = 'Root';")
     categories = cursor.fetchall()
     category_list = [i[0] for i in categories]
     category_list.sort()
     return category_list
+
+
+# Get parent category from a sub category
+def get_parent_category(category):
+    connection = sql.connect('database.db')
+    cursor = connection.execute('SELECT parent_category FROM Categories WHERE category_name = ?;', (category,))
+    parent_category = cursor.fetchone()[0]
+    return parent_category
 
 
 # Get auction listings from selected child categories in a list

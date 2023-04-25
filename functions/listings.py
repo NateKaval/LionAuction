@@ -7,7 +7,7 @@ import sqlite3 as sql
 # Populate Auction Table
 def auction_listings():
     connection = sql.connect('database.db')
-    cursor = connection.execute("""
+    cursor = connection.execute('''
         SELECT
           Auction_Listings.Listing_ID,
           Auction_Listings.Seller_Email,
@@ -22,7 +22,7 @@ def auction_listings():
         WHERE Auction_Listings.Status = 1
         GROUP BY
           Auction_Listings.Listing_ID;
-    """)
+    ''')
     return cursor.fetchall()
 # If there are no bids yet for a particular auction listing, the result of the LEFT JOIN between the Auction_Listings
 # table and the Bids table will include all the rows from the Auction_Listings table, and NULL values for the columns
@@ -33,5 +33,31 @@ def auction_listings():
 # Find and return particular auction listing given the seller email and auction listing id
 def get_auction_listing(seller_email, auction_listing_id):
     connection = sql.connect('database.db')
-    cursor = connection.execute('SELECT * FROM Auction_Listings WHERE Seller_Email = ? AND Listing_ID = ?;', (seller_email, auction_listing_id))
-    return cursor.fetchall()
+    cursor = connection.execute('''
+        SELECT
+            Auction_Listings.Listing_ID,
+            Auction_Listings.Seller_Email,
+            Auction_Listings.Auction_Title,
+            Auction_Listings.Category,
+            Auction_Listings.Product_Name,
+            Auction_Listings.Product_Description,
+            Auction_Listings.Quantity,
+            Auction_Listings.Reserve_Price,
+            Auction_Listings.Max_bids,
+            Auction_Listings.Status,
+            MAX(Bids.Bid_price) AS Max_Bid_Price,
+            (Auction_Listings.Max_bids - COUNT(Bids.Bid_ID)) AS Remaining_Bids,
+            COUNT(Bids.Bid_ID) AS Bid_Count,
+            Bids.Bidder_Email AS Highest_Bidder_Email
+        FROM
+            Auction_Listings
+            LEFT JOIN Bids ON Auction_Listings.Listing_ID = Bids.Listing_ID
+        WHERE
+            Auction_Listings.Seller_Email = ?
+            AND Auction_Listings.Listing_ID = ?
+        GROUP BY
+            Auction_Listings.Listing_ID;
+    ''', (seller_email, auction_listing_id))
+    return cursor.fetchone()
+
+

@@ -38,7 +38,7 @@
             <li><a class="dropdown-item" href="#">Settings</a></li>
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><form  class="form-inline my-2 my-lg-0" action="/logout" method="post"><button class="dropdown-item" type="submit">Logout</button></form></li>
+            <li><form  class="form-inline my-2 my-lg-0" action="/logout" method="get"><button class="dropdown-item" type="submit">Logout</button></form></li>
           </ul>
       </div>
   </div>
@@ -48,7 +48,7 @@
     <p>This site allows students and other businesses to auction and bid on items</p>
     <p><span><a href="{{ url_for('home') }}">Home</a></span>/{{ category }}</p>
     {% if sub_categories %}
-    <form method="POST" action="/auction-sub-filter" id="category_form">
+    <form method="get" action="/auction-sub-filter" id="category_form">
         <input type="hidden" name="category" value="{{ category }}">
         <input type="hidden" name="sub_categories" value="{{ sub_categories }}">
         {% for sub_category in sub_categories %}
@@ -60,17 +60,13 @@
     <div class="card-body">
         <h2 class="card-title">Listings</h2>
         {% for Listing_ID,Seller_Email,Auction_Title,Category,Max_Bid_Price,Remaining_Bids,Bid_Count in auctions %}
-        <form action="/product-page" method="post">
-            <input type="hidden" name="listing_id" value="{{ Listing_ID }}">
-            <input type="hidden" name="seller_email" value="{{ Seller_Email }}">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">{{ Auction_Title }}</h4>
-                    <p class="card-text">{{ Category }}</p>
-                    <a href="#" class="card-link">${% if Max_Bid_Price is not none %}{{ Max_Bid_Price }}{% else %}0{% endif %} * {{ Remaining_Bids }} Current Bids {{ Bid_Count }}</a>
-                </div>
+        <div class="card" onclick="location.href='/product-page?listing_id={{ Listing_ID }}&seller_email={{ Seller_Email }}';">
+            <div class="card-body">
+                <h4 class="card-title">{{ Auction_Title }}</h4>
+                <p class="card-text">{{ Category }}</p>
+                <a href="#" class="card-link">${% if Max_Bid_Price is not none %}{{ Max_Bid_Price }}{% else %}0{% endif %} * {{ Remaining_Bids }} Current Bids {{ Bid_Count }}</a>
             </div>
-        </form>
+        </div>
         {% endfor %}
     </div>
 </div>

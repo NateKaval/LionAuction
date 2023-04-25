@@ -1,10 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 </head>
 <body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Auction Site</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Categories</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">My Account</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-</body>
-</html>
+  <!-- Page Content -->
+  <div class="container my-5">
+    <div class="row">
+      <div class="col-md-6">
+        <!-- Product Image -->
+        <img class="img-fluid" src="https://via.placeholder.com/500x500.png?text=Product+Image" alt="Product Image">
+      </div>
+      <div class="col-md-6">
+        <!-- Product Info -->
+        <p><span><a href="{{ url_for('home') }}">Home</a></span>{% if parent_category != product_info[3] %} / <a href='/parent-filter?categoryName={{parent_category }}'>{{ parent_category}}</a>{% endif %} / <a href='/parent-filter?categoryName={{ product_info[3] }}'>{{ product_info[3] }}</a> / {{ product_info[2] }}</p>
+        <h1 class="mb-3">{{ product_info[2] }}</h1>
+        <p class="text-muted">{{ product_info[3] }}</p>
+        <hr>
+        <h2 class="mb-3">${{ product_info[9] }}</h2>
+        <p class="mb-3">{{ product_info[5] }}</p>
+        <p>last bidder {{ product_info[13] }}</p>
+        <form action="/add-to-cart" method="post">
+        <input type="hidden" name="product_id">
+        <button type="submit" class="btn btn-primary">Bid</button>
+      </form>
+    </div>
+  </div>
+</div>

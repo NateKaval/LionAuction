@@ -38,7 +38,7 @@
             <li><a class="dropdown-item" href="#">Settings</a></li>
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><form  class="form-inline my-2 my-lg-0" action="/logout" method="post"><button class="dropdown-item" type="submit">Logout</button></form></li>
+            <li><form  class="form-inline my-2 my-lg-0" action="/logout" method="get"><button class="dropdown-item" type="submit">Logout</button></form></li>
           </ul>
       </div>
   </div>
@@ -46,7 +46,7 @@
 <div class="container mt-3">
     <h1>Welcome to Lion Auction</h1>
     <p>This site allows students and other businesses to auction and bid on items</p>
-    <form id="parentFilter" action="/parent-filter" method="post">
+    <form id="parentFilter" action="/parent-filter" method="get">
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                 All
@@ -62,17 +62,14 @@
     <div class="card-body">
         <h2 class="card-title">Listings</h2>
         {% for Listing_ID,Seller_Email,Auction_Title,Category,Max_Bid_Price,Remaining_Bids,Bid_Count in auctions %}
-        <form action="/listing-page" method="post">
-          <div class="card">
+        <div class="card" onclick="location.href='/product-page?listing_id={{ Listing_ID }}&seller_email={{ Seller_Email }}';">
             <div class="card-body">
-              <h4 class="card-title">{{ Auction_Title }}</h4>
-              <p class="card-text">{{ Category }}</p>
-              <a href="#" class="card-link">${% if Max_Bid_Price is not none %}{{ Max_Bid_Price }}{% else %}0{% endif %} * {{ Remaining_Bids }} Current Bids {{ Bid_Count }}</a>
+                <h4 class="card-title">{{ Auction_Title }}</h4>
+                <p class="card-text">{{ Category }}</p>
+                <a href="#" class="card-link">${% if Max_Bid_Price is not none %}{{ Max_Bid_Price }}{% else %}0{% endif %} * {{ Remaining_Bids }} Current Bids {{ Bid_Count }}</a>
             </div>
-          </div>
-        </form>
+        </div>
         {% endfor %}
-
     </div>
 </div>
 <script>
