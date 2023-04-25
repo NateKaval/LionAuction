@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, session, redirect, url_for
 
 from functions.categories import *
 from functions.listings import *
+from functions.bidding import *
 
 app = Flask(__name__)
 app.secret_key = 'LionAuction'
@@ -85,7 +86,8 @@ def parent_filter():
     auctions = get_category_auctions(category)
     get_all_auctions_in_subcategories(category, auctions)
     sub_category_list = get_sub_category_list(category)
-    return render_template('bidder/index.html', user=session['email'], auctions=auctions, categories=sub_category_list, parent_category=category)
+    return render_template('bidder/index.html', user=session['email'], auctions=auctions, categories=sub_category_list,
+                           parent_category=category)
 
 
 # render the auction listing when a sub category(s) are selected
@@ -114,7 +116,23 @@ def product_listing_page():
     print(product_info)
     print(get_parent_category(product_info[3]))
     parent_category = get_parent_category(product_info[3])
-    return render_template('bidder/product-page.html', user=session['email'], product_info=product_info, parent_category=parent_category)
+    return render_template('bidder/product-page.html', user=session['email'], product_info=product_info,
+                           parent_category=parent_category)
+
+
+# allow user to place a bid
+@app.route('/place-bid', methods=['POST'])
+def place_bid():
+    bidder_email = request.form['bidder_email']
+    seller_email = request.form['seller_email']
+    listing_id = request.form['listing_id']
+    bid_amount = request.form['bid_amount']
+    print("bidder email " + bidder_email + " seller email " + seller_email + " listing id " + listing_id + " bid amount " + bid_amount)
+    bid(seller_email, bidder_email, bid_amount, listing_id)
+    product_info = get_auction_listing(seller_email, listing_id)
+    parent_category = get_parent_category(product_info[3])
+    return render_template('bidder/product-page.html', user=session['email'], product_info=product_info,
+                           parent_category=parent_category)
 
 
 # Run main app

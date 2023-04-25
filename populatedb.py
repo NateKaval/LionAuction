@@ -317,7 +317,7 @@ def populate_auction_listings(file):
     # Create table if it doesn't exist
     connection.execute('CREATE TABLE IF NOT EXISTS Auction_Listings(Seller_Email TEXT, Listing_ID INTEGER, '
                        'Category TEXT, Auction_Title TEXT, Product_Name TEXT, Product_Description TEXT, '
-                       'Quantity INTEGER, Reserve_Price REAL, Max_bids INTEGER, Status TEXT, '
+                       'Quantity INTEGER, Reserve_Price REAL, Max_bids INTEGER, Status INTEGER, '
                        'PRIMARY KEY (Seller_Email, Listing_ID));')
 
     # Open csv file
@@ -354,7 +354,7 @@ def populate_bids(file):
 
     # Create table if it doesn't exist
     connection.execute('CREATE TABLE IF NOT EXISTS Bids(Bid_ID INTEGER PRIMARY KEY, Seller_Email TEXT, Listing_ID '
-                       'INTEGER, Bidder_email TEXT, Bid_price INTEGER, '
+                       'INTEGER, Bidder_email TEXT, Bid_price REAL, '
                        'FOREIGN KEY(Listing_ID) REFERENCES Auction_Listings(Listing_ID));')
 
     # Open csv file

@@ -45,7 +45,7 @@ def get_auction_listing(seller_email, auction_listing_id):
             Auction_Listings.Reserve_Price,
             Auction_Listings.Max_bids,
             Auction_Listings.Status,
-            MAX(Bids.Bid_price) AS Max_Bid_Price,
+            COALESCE(MAX(Bids.Bid_price), 0) AS Max_Bid_Price,
             (Auction_Listings.Max_bids - COUNT(Bids.Bid_ID)) AS Remaining_Bids,
             COUNT(Bids.Bid_ID) AS Bid_Count,
             Bids.Bidder_Email AS Highest_Bidder_Email
@@ -59,5 +59,6 @@ def get_auction_listing(seller_email, auction_listing_id):
             Auction_Listings.Listing_ID;
     ''', (seller_email, auction_listing_id))
     return cursor.fetchone()
+
 
 
