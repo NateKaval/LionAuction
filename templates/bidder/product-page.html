@@ -45,7 +45,7 @@
       </div>
       <div class="col-md-6">
         <!-- Product Info -->
-        <p><span><a href="{{ url_for('home') }}">Home</a></span>{% if parent_category != product_info[3] %} / <a href='/parent-filter?categoryName={{parent_category }}'>{{ parent_category}}</a>{% endif %} / <a href='/parent-filter?categoryName={{ product_info[3] }}'>{{ product_info[3] }}</a> / {{ product_info[2] }}</p>
+        <p><span><a href="{{ url_for('home') }}">LionAuction</a></span> / <a href='/parent-filter?categoryName={{ product_info[3] }}'>{{ product_info[3] }}</a> / {{ product_info[2] }}</p>
         <h1 class="mb-3">{{ product_info[2] }}</h1>
         <p class="text-muted">{{ product_info[3] }}</p>
         <hr>
@@ -58,13 +58,15 @@
           <input type="hidden" name="bidder_email" value="{{ user }}">
           <div class="row">
             <div class="col-sm-4">
-              <input type="text" class="form-control" placeholder="Enter text" name="bid_amount" required>
+              <input type="text" class="form-control" placeholder="Enter text" name="bid_amount" required {% if user == product_info[13] %}disabled{% endif %}>
             </div>
             <div class="col-sm-8">
-              <button type="submit" class="btn btn-primary">Bid</button>
+              <button type="submit" class="btn btn-primary" {% if user == product_info[13] %}disabled{% endif %}>Bid</button>
             </div>
           </div>
         </form>
     </div>
   </div>
 </div>
+</body>
+</html>

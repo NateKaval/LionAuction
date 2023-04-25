@@ -6,6 +6,14 @@ connection = sql.connect('database.db')
 cursor = connection.cursor()
 
 
+# create a table for notifications
+def create_notification_table():
+    # Drop table if it exists
+    connection.execute('DROP TABLE IF EXISTS Notifications;')
+    # Create table if it doesn't exist
+    connection.execute('CREATE TABLE IF NOT EXISTS Notifications(email TEXT PRIMARY KEY, password TEXT NOT NULL);')
+
+
 # Populate user table
 def populate_users(file):
     # Drop table if it exists
