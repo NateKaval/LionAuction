@@ -63,3 +63,37 @@ def get_sub_category_list(category):
     sub_categories = cursor.fetchall()
     all_sub_category_list = [i[0] for i in sub_categories]
     return all_sub_category_list
+
+
+# Get all the auctions based on the category name
+def get_category_auctions(category):
+    connection = sql.connect('database.db')
+    cursor = connection.execute("""
+        SELECT
+          Auction_Listings.Listing_ID,
+          Auction_Listings.Seller_Email,
+          Auction_Listings.Auction_Title,
+          Auction_Listings.Category,
+          MAX(Bids.Bid_price) AS Max_Bid_Price,
+          (Auction_Listings.Max_bids - COUNT(Bids.Bid_ID)) AS Remaining_Bids,
+          COUNT(Bids.Bid_ID) AS Bid_Count
+        FROM
+          Auction_Listings
+          LEFT JOIN Bids ON Auction_Listings.Listing_ID = Bids.Listing_ID
+        WHERE
+          Auction_Listings.Status = 1
+          AND Auction_Listings.Category = ?
+        GROUP BY
+          Auction_Listings.Listing_ID;
+    """, (category,))
+    return cursor.fetchall()
+
+
+# Recurse through all the categories and get the auctions
+def get_all_auctions_in_subcategories(category, auctions):
+    sub_categories = get_sub_category_list(category)
+    if sub_categories:
+        for sub_category in sub_categories:
+            sub_category_auctions = get_category_auctions(sub_category)
+            auctions.extend(sub_category_auctions)
+            get_all_auctions_in_subcategories(sub_category, auctions)

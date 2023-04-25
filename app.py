@@ -79,24 +79,13 @@ def logout():
     return redirect('/')
 
 
-# This route render the template for all auction listings from the category selected in the category dropdown
-# Uses the get_all_sub_category_auctions function to get all auctions from the category
-# Then get the sub category list from the get_sub_category_list function given a category
-# @app.route('/parent-filter', methods=['GET'])
-# def parent_filter():
-#     category = request.args.get('categoryName')
-#     auctions = get_all_sub_category_auctions(category)
-#     sub_category_list = get_sub_category_list(category)
-#     return render_template('bidder/listings.html', user=session['email'], category=category, auctions=auctions,
-#                            sub_categories=sub_category_list)
-
 @app.route('/parent-filter', methods=['GET'])
 def parent_filter():
     category = request.args.get('categoryName')
-    auctions = get_all_sub_category_auctions(category)
+    auctions = get_category_auctions(category)
+    get_all_auctions_in_subcategories(category, auctions)
     sub_category_list = get_sub_category_list(category)
-    return render_template('bidder/listings.html', user=session['email'], category=category, auctions=auctions,
-                           sub_categories=sub_category_list)
+    return render_template('bidder/index.html', user=session['email'], auctions=auctions, categories=sub_category_list, parent_category=category)
 
 
 # render the auction listing when a sub category(s) are selected

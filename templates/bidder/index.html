@@ -49,9 +49,9 @@
     <form id="parentFilter" action="/parent-filter" method="get">
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                All
+                {% if parent_category %}{{ parent_category }}{% else %}All{% endif %}
             </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="height: 200px; overflow-y: scroll;">
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="max-height: 200px; overflow-y: auto;">
                 {% for parent_category in categories %}
                 <li><a class="dropdown-item" href="#" onclick="updateDropdownText(this)">{{ parent_category }}</a></li>
                 {% endfor %}
@@ -64,7 +64,7 @@
         {% for Listing_ID,Seller_Email,Auction_Title,Category,Max_Bid_Price,Remaining_Bids,Bid_Count in auctions %}
         <div class="card" onclick="location.href='/product-page?listing_id={{ Listing_ID }}&seller_email={{ Seller_Email }}';">
             <div class="card-body">
-                <h4 class="card-title">{{ Auction_Title }}</h4>
+                <h4 class="card-title">{{ Listing_ID }} {{ Auction_Title }}</h4>
                 <p class="card-text">{{ Category }}</p>
                 <a href="#" class="card-link">${% if Max_Bid_Price is not none %}{{ Max_Bid_Price }}{% else %}0{% endif %} * {{ Remaining_Bids }} Current Bids {{ Bid_Count }}</a>
             </div>
