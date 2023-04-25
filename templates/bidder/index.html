@@ -38,9 +38,8 @@
     </div>
 </nav>
 <div class="container mt-3">
-    <h1>Welcome to Lion Auction</h1>
+    <h1>Welcome {{user}} to Lion Auction</h1>
     <p>This site allows students and other businesses to auction and bid on items</p>
-    {{ visited_categories }}
     {% if categories %}
     Filter:
     <form id="parentFilter" action="/parent-filter" method="get">
@@ -62,9 +61,9 @@
         {% for Listing_ID,Seller_Email,Auction_Title,Category,Max_Bid_Price,Remaining_Bids,Bid_Count in auctions %}
         <div class="card" onclick="location.href='/product-page?listing_id={{ Listing_ID }}&seller_email={{ Seller_Email }}';">
             <div class="card-body">
-                <h4 class="card-title">{{ Listing_ID }} {{ Auction_Title }}</h4>
+                <h4 class="card-title">{{ Auction_Title }}</h4>
                 <p class="card-text">{{ Category }}</p>
-                <a href="#" class="card-link">${% if Max_Bid_Price is not none %}{{ Max_Bid_Price }}{% else %}0{% endif %} * {{ Remaining_Bids }} Current Bids {{ Bid_Count }}</a>
+                <p class="card-text">${% if Max_Bid_Price is not none %}{{ Max_Bid_Price }}{% else %}0{% endif %} * Remaining_Bids {{ Remaining_Bids }} Current Bids {{ Bid_Count }}</p>
             </div>
         </div>
         {% endfor %}

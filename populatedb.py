@@ -11,7 +11,10 @@ def create_notification_table():
     # Drop table if it exists
     connection.execute('DROP TABLE IF EXISTS Notifications;')
     # Create table if it doesn't exist
-    connection.execute('CREATE TABLE IF NOT EXISTS Notifications(email TEXT PRIMARY KEY, password TEXT NOT NULL);')
+    connection.execute('CREATE TABLE IF NOT EXISTS Notifications(notification_ID INTEGER PRIMARY KEY AUTOINCREMENT,'
+                       'bidder_email TEXT,seller_email TEXT,listing_id INTEGER,winning_bid REAL);')
+
+    connection.commit()
 
 
 # Populate user table

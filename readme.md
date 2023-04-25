@@ -43,3 +43,34 @@ in the right hand corner of the nav bar.
 
 In order to log out a route is created to link to the sign-out button that ends the current users
 session.
+
+## Task 2 Category Browsing:
+
+1. **Users can view current parent directory**
+
+Completed by populating a dropdown with all the root categories. Then recursively calling those
+categories to populate the auction results
+
+2. **User can click on auction listing**
+
+When a user clicks on the auction listing it will then render a page for that listing and 
+allow them to view the information along with being able to bid
+
+## Task 3 Auction Listing:
+
+1. **Seller can view their listings**
+
+On the main seller page they can view their current, past, and inactive listings
+
+2. **Seller can post new listing**
+
+On the nav bar a seller can click new posting and then fill out the information needed for the 
+new auction listing and it will add to the auction listings table
+
+## Task 4 Bidding
+
+1. **A bidder can bid on an item**
+
+When a bidder finds a listing they would like to bid on, they can do so by putting in 
+the amount they'd like to bid. Once that goes through they can't bid again til someone else 
+does.

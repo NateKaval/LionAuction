@@ -5,9 +5,63 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <title>LionAuction | Auctions</title>
 </head>
 <body>
-<h1>Welcome Seller</h1>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('home') }}">LionAuction</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('home') }}">Listings</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('new_listing_page') }}">New Listing</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">My Account</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <form  class="form-inline my-2 my-lg-0" action="/logout" method="get"><button class="btn btn-outline-success" type="submit">Logout</button></form>
+            </li>
+        </ul>
+      </div>
+    </div>
+</nav>
+<div class="container mt-3">
+    <h1>Welcome {{user}} to Lion Auction</h1>
+    <p>This site allows sellers to manage and make new auction listings</p>
+    You Current Listings:
+    <div class="card-body">
+        <h2 class="card-title">Listings</h2>
+        {% for Listing_ID,Seller_Email,Auction_Title,Category,Product_Name, Product_Description, Quantity, Reserve_Price, Max_bids, Status, Max_Bid_Price, Remaining_Bids, Bid_Count, Highest_Bidder_Email in auctions %}
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">{% if Status == 0 %}Sold{% elif Status == 1 %}Active{% else %}Inactive{% endif %} {{ Auction_Title }}</h4>
+                <p class="card-text">{{ Category }}</p>
+                <p class="card-text">Product Name: {{Product_Name}}</p>
+                <p class="card-text">Product Description: {{Product_Description}}</p>
+                <p class="card-text">Quantity: {{Quantity}}</p>
+                <p class="card-text">Reserve Price: {{Reserve_Price}}</p>
+                <p class="card-text">Max Bids: {{Max_bids}}</p>
+                <p class="card-text">Max Bid Price: {{Max_Bid_Price}}</p>
+                <p class="card-text">Remaining Bids: {{Remaining_Bids}}</p>
+                <p class="card-text">Bid Count: {{Bid_Count}}</p>
+                <p class="card-text">Highest Bid Email: {{Highest_Bidder_Email}}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 </body>
 </html>

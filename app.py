@@ -25,7 +25,9 @@ def home():
     if 'email' in session:
         print(session['user_type'])
         if session['user_type'] == 'Seller':
-            return render_template('seller/index.html', user=session['email'])
+            seller_email = session['email']
+            auctions = get_auction_listings(seller_email)
+            return render_template('seller/index.html', user=session['email'], auctions=auctions)
         elif session['user_type'] == 'Bidder':
             print(auction_listings())
             auctions = auction_listings()
@@ -127,13 +129,31 @@ def place_bid():
     seller_email = request.form['seller_email']
     listing_id = request.form['listing_id']
     bid_amount = request.form['bid_amount']
-    print(
-        "bidder email " + bidder_email + " seller email " + seller_email + " listing id " + listing_id + " bid amount " + bid_amount)
     bid(seller_email, bidder_email, bid_amount, listing_id)
     product_info = get_auction_listing(seller_email, listing_id)
     parent_category = get_parent_category(product_info[3])
     return render_template('bidder/product-page.html', user=session['email'], product_info=product_info,
                            parent_category=parent_category)
+
+
+@app.route('/new-listing-page', methods=['GET'])
+def new_listing_page():
+    return render_template('seller/seller-listings.html', user=session['email'])
+
+
+# post new seller listing
+@app.route('/post-listing', methods=['POST'])
+def post_listing():
+    auction_title = request.form['Auction_Title']
+    category = request.form['Category']
+    product_name = request.form['Product_Name']
+    product_description = request.form['Product_Description']
+    quantity = request.form['Quantity']
+    reserve_price = request.form['Reserve_Price']
+    max_bids = request.form['Max_bids']
+    seller_email = session['email']
+    seller_new_listing(seller_email,category,auction_title,product_name,product_description,int(quantity),float(reserve_price),int(max_bids))
+    return redirect(url_for('home'))
 
 
 # Run main app

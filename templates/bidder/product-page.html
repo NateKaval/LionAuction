@@ -48,10 +48,14 @@
         <p><span><a href="{{ url_for('home') }}">LionAuction</a></span> / <a href='/parent-filter?categoryName={{ product_info[3] }}'>{{ product_info[3] }}</a> / {{ product_info[2] }}</p>
         <h1 class="mb-3">{{ product_info[2] }}</h1>
         <p class="text-muted">{{ product_info[3] }}</p>
+        <p class="text-muted">Product Name: {{product_info[4]}}</p>
         <hr>
         <h2 class="mb-3">${{ product_info[10] }}</h2>
         <p class="mb-3">{{ product_info[5] }}</p>
         <p>last bidder {{ product_info[13] }}</p>
+        <p>Quantity: {{product_info[6]}}</p>
+        <p>Current Bids: {{product_info[13]}}</p>
+        <p>Remaining Bids: {{ product_info[11] }}</p>
         <form action="/place-bid" method="post">
           <input type="hidden" name="seller_email" value="{{ product_info[1] }}">
           <input type="hidden" name="listing_id" value="{{ product_info[0] }}">
